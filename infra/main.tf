@@ -25,14 +25,22 @@ resource "hcloud_ssh_key" "main" {
 module "salt-master" {
   source = "./modules/saltmaster"
 
-  hcloud_server_name = "kubernetes-control-plane"
+  hcloud_server_name = "server"
   hcloud_ssh_key_id  = hcloud_ssh_key.main.id
 }
 
 module "salt-minion" {
   source = "./modules/saltminion"
 
-  hcloud_server_name = "kubernetes-node"
+  hcloud_server_name = "node-0"
+  hcloud_ssh_key_id  = hcloud_ssh_key.main.id
+  saltmaster_ip      = module.salt-master.primary_ip_address
+}
+
+module "salt-minion" {
+  source = "./modules/saltminion"
+
+  hcloud_server_name = "node-1"
   hcloud_ssh_key_id  = hcloud_ssh_key.main.id
   saltmaster_ip      = module.salt-master.primary_ip_address
 }

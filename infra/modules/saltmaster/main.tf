@@ -29,14 +29,14 @@ resource "hcloud_server" "salt-master" {
   image       = "ubuntu-24.04"
   location    = "hel1"
   server_type = "cx23"
-  ssh_keys   = [var.hcloud_ssh_key_id]
+  ssh_keys    = [var.hcloud_ssh_key_id]
 
   public_net {
     ipv4 = hcloud_primary_ip.main.id
   }
 
   user_data = templatefile("${path.module}/common_userdata_master.yaml", {
-    hostname = "salt-master"
+    hostname    = "${var.hcloud_server_name}"
     master_addr = hcloud_primary_ip.main.ip_address
   })
 }

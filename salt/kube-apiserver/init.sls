@@ -93,3 +93,48 @@ kube-apiserver_daemon_reload:
             --kubeconfig={{ kubernetes_lib }}/admin.kubeconfig
         }
   cmd.run: []
+
+### Allow kube-api-server to access kubelet on every node ###
+{{ kubernetes_lib }}/kube-apiserver-to-kubelet.yaml:
+  file.managed:
+    - makedirs: True
+    - mode: 644
+    - contents: |
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRole
+        metadata:
+          annotations:
+            rbac.authorization.kubernetes.io/autoupdate: "true"
+          labels:
+            kubernetes.io/bootstrapping: rbac-defaults
+          name: system:kube-apiserver-to-kubelet
+        rules:
+          - apiGroups:
+              - ""
+            resources:
+              - nodes/proxy
+              - nodes/stats
+              - nodes/log
+              - nodes/spec
+              - nodes/metrics
+            verbs:
+              - "*"
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRoleBinding
+        metadata:
+          name: system:kube-apiserver
+          namespace: ""
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: system:kube-apiserver-to-kubelet
+        subjects:
+          - apiGroup: rbac.authorization.k8s.io
+            kind: User
+            name: kubernetes
+  cmd.run:
+    - name: kubectl apply -f {{ kubernetes_lib }}/kube-apiserver-to-kubelet.yaml --kubeconfig {{ kubernetes_lib }}/admin.kubeconfig
+    - requires:
+      - file: {{ kubernetes_lib }}/kube-apiserver-to-kubelet.yaml
+      - cmd: /opt/kubernetes/generate_kubeconfig_admin.sh

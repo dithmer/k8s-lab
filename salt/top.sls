@@ -15,3 +15,4 @@
     - kubectl
     - kubernetes-swap
     - kubernetes-cni
+    - containerd

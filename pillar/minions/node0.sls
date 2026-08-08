@@ -7,3 +7,6 @@ kubernetes-cni:
 
 kubectl:
   version: 1.36.2
+
+containerd:
+  version: 2.3.3

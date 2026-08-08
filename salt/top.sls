@@ -16,3 +16,4 @@
     - kubernetes-swap
     - kubernetes-cni
     - containerd
+    - kubelet

@@ -11,6 +11,29 @@ download_containerd:
     - options: "--strip-components=1"
     - enforce_toplevel: False
 
+# https://github.com/opencontainers/runc/releases/download/v1.3.0-rc.1/runc.amd64
+{% set runc_pillar = salt['pillar.get']('runc', {}) %}
+{% set runc_version = runc_pillar['version'] %}
+{% set runc_url = "https://github.com/opencontainers/runc/releases/download/v" + runc_version + "/runc.amd64" %}
+download_runc:
+  file.managed:
+    - name: /usr/local/bin/runc
+    - source: {{ runc_url }}
+    - skip_verify: True
+    - mode: 755
+    - user: root
+    - group: root
+
+{% set crictl_pillar = salt['pillar.get']('crictl', {}) %}
+{% set crictl_version = crictl_pillar['version'] %}
+{% set crictl_url = "https://github.com/kubernetes-sigs/cri-tools/releases/download/v" + crictl_version + "/crictl-v" + crictl_version + "-linux-amd64.tar.gz" %}
+download_crictl:
+  archive.extracted:
+    - name: /usr/local/bin/
+    - enforce_toplevel: False
+    - source: {{ crictl_url }}
+    - skip_verify: True
+
 {% set containerd_config_dir = "/etc/containerd" %}
 
 {{ containerd_config_dir }}/config.toml:

@@ -11,11 +11,17 @@ kubectl:
 kubelet:
   version: 1.36.2
 
+kube-proxy:
+  version: 1.36.2
+
 containerd:
   version: 2.3.3
 
-kube-proxy:
-  version: 1.36.2
+runc:
+  version: 1.5.1
+
+crictl:
+  version: 1.36.0
 
 # WARNING: The following section contains key files in clear text. In a real environment, this 
 # should never be the case. Use gpg encryption via salt, or an external secrets manager to store 

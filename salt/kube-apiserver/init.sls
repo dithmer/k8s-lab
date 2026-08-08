@@ -4,6 +4,9 @@
 {% set kube_apiserver_version = kube_apiserver_pillar['version'] %} # fail if version is not set
 {% set kube_apiserver_download_url = 'https://dl.k8s.io/v' + kube_apiserver_version + '/bin/linux/amd64/kube-apiserver' %}
 
+{% set kubernetes_lib = '/var/lib/kubernetes' %}
+{% set pki_dir = '/var/lib/pki' %}
+
 download_kube_apiserver:
   file.managed:
     - name: /usr/local/bin/kube-apiserver
@@ -61,3 +64,32 @@ kube-apiserver_daemon_reload:
     - enable: True
     - watch:
       - file: /etc/systemd/system/{{ service_name }}.service
+
+### Create the admin kubeconfig for the admin user ###
+/opt/kubernetes/generate_kubeconfig_admin.sh:
+  file.managed:
+    - makedirs: True
+    - mode: 755
+    - contents: |
+        {
+          kubectl config set-cluster kubernetes \
+            --certificate-authority={{ pki_dir }}/ca_cert.pem \
+            --embed-certs=true \
+            --server=https://server.kubernetes.local:6443 \
+            --kubeconfig={{ kubernetes_lib }}/admin.kubeconfig
+
+          kubectl config set-credentials admin \
+            --client-certificate={{ pki_dir }}/admin_cert.pem \
+            --client-key={{ pki_dir }}/admin_key.pem \
+            --embed-certs=true \
+            --kubeconfig={{ kubernetes_lib }}/admin.kubeconfig
+
+          kubectl config set-context default \
+            --cluster=kubernetes \
+            --user=admin \
+            --kubeconfig={{ kubernetes_lib }}/admin.kubeconfig
+
+          kubectl config use-context default \
+            --kubeconfig={{ kubernetes_lib }}/admin.kubeconfig
+        }
+  cmd.run: []

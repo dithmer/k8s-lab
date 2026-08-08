@@ -17,3 +17,4 @@
     - kubernetes-cni
     - containerd
     - kubelet
+    - kube-proxy

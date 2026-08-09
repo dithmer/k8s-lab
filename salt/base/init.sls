@@ -13,5 +13,5 @@ hostnames_in_hosts:
     - marker_end: "# END SALT MANAGED HOSTNAMES"
     - content: | # from salt mine
         {% for hostname, ip in salt['mine.get']('*', 'network.ip_addrs').items() %}
-        {{ ip[0] }} {{ hostname }}.kubernetes.local
+        {{ ip[0] }} {{ hostname }}.kubernetes.local {{ hostname }}
         {% endfor %}

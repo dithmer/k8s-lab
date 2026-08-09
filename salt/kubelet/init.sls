@@ -87,6 +87,7 @@
         ExecStart=/usr/local/bin/kubelet \
           --config={{ kubelet_config_dir }}/kubelet-config.yaml \
           --kubeconfig={{ kubelet_config_dir }}/kubelet.kubeconfig \
+          --hostname-override={{ grains['id'] }}.kubernetes.local \
           --v=2
         Restart=on-failure
         RestartSec=5

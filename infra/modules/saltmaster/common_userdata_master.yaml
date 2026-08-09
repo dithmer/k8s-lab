@@ -36,6 +36,12 @@ write_files:
                 - root: pillar
 
       ext_pillar_first: True
+  - path: /srv/pillar/top.sls
+    content: |
+      base:
+        '*':
+          - minions.{{ grains['id'] }}
+          - ignore_missing: True
 
 runcmd:
   - mkdir -p /etc/apt/keyrings

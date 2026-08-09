@@ -82,7 +82,7 @@ account_certs=("service-accounts" "admin")
 for i in ${account_certs[*]}; do
   gen_key_and_cert "${i}" "users.conf" "${i}"
 done
-prepare_pillar "ca" "kube-api-server" "service-accounts" "kube-controller-manager" "kube-scheduler" "admin" > control_plane_pillar.yaml
+prepare_pillar "ca" "kube-api-server" "service-accounts" "kube-controller-manager" "kube-scheduler" "admin" > server.sls
 
 
 for i in $(seq 0 "$amount_of_nodes"); do
@@ -92,7 +92,7 @@ for i in $(seq 0 "$amount_of_nodes"); do
 
   gen_key_and_cert "$i" "node_${i}.conf"
 
-  prepare_pillar "ca":cert "kube-proxy" "$i" | sed 's/'"${i}"'/kubelet/g' > "${i}"_pillar.yaml
+  prepare_pillar "ca":cert "kube-proxy" "$i" | sed 's/'"${i}"'/kubelet/g' > "${i}".sls
 done
 
 rm -rf -- *.csr *.srl *.key *.crt node_*.conf

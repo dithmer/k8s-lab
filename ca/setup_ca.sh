@@ -68,6 +68,7 @@ if [[ ! "$amount_of_nodes" =~ ^-?[0-9]+$ ]] || [ "$amount_of_nodes" -lt 1 ]; the
   echo "Amount of nodes must be at least 1" >&2
   exit 1
 fi
+amount_of_nodes=$((amount_of_nodes - 1))
 
 gen_ca
 
@@ -84,7 +85,7 @@ done
 prepare_pillar "ca" "kube-api-server" "service-accounts" "kube-controller-manager" "kube-scheduler" "admin" > control_plane_pillar.yaml
 
 
-for i in $(seq 1 "$amount_of_nodes"); do
+for i in $(seq 0 "$amount_of_nodes"); do
   i="node-${i}"
   # config contains {{ node_name }} placeholder, replace it with the actual node name
   sed "s/{{ node_name }}/${i}/g" node.conf > "node_${i}.conf"

@@ -5,3 +5,4 @@ id*
 *.key
 *.crt
 *.srl
+ca/*_pillar.yaml

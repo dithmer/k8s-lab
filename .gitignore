@@ -1,3 +1,7 @@
 *.tfstate*
 hcloud.tfvars
 id*
+*.csr
+*.key
+*.crt
+*.srl

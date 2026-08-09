@@ -92,7 +92,7 @@ for i in $(seq 0 "$amount_of_nodes"); do
 
   gen_key_and_cert "$i" "node_${i}.conf"
 
-  prepare_pillar "ca":cert "$i" | sed 's/'"${i}"'/kubelet/g' > "${i}"_pillar.yaml
+  prepare_pillar "ca":cert "kube-proxy" "$i" | sed 's/'"${i}"'/kubelet/g' > "${i}"_pillar.yaml
 done
 
 rm -rf -- *.csr *.srl *.key *.crt node_*.conf

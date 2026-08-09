@@ -37,15 +37,15 @@ download_kube_apiserver:
             --event-ttl=1h \
             #--encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \
             --kubelet-certificate-authority=/var/lib/pki/ca_cert.pem \
-            --kubelet-client-certificate=/var/lib/pki/kube-apiserver_cert.pem \
-            --kubelet-client-key=/var/lib/pki/kube-apiserver_key.pem \
+            --kubelet-client-certificate=/var/lib/pki/kube-api-server_cert.pem \
+            --kubelet-client-key=/var/lib/pki/kube-api-server_key.pem \
             --runtime-config='api/all=true' \
             --service-account-key-file=/var/lib/pki/service-accounts_cert.pem \
             --service-account-signing-key-file=/var/lib/pki/service-accounts_key.pem \
             --service-account-issuer=https://server.kubernetes.local:6443 \
             --service-node-port-range=30000-32767 \
-            --tls-cert-file=/var/lib/pki/kube-apiserver_cert.pem \
-            --tls-private-key-file=/var/lib/pki/kube-apiserver_key.pem \
+            --tls-cert-file=/var/lib/pki/kube-api-server_cert.pem \
+            --tls-private-key-file=/var/lib/pki/kube-api-server_key.pem \
             --v=2
           Restart=on-failure
           RestartSec=5

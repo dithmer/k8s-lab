@@ -40,7 +40,10 @@
         memorySwap:
           swapBehavior: NoSwap
         port: 10250
-        resolvConf: "/etc/resolv.conf"
+        clusterDNS:
+          - 10.0.0.10
+        clusterDomain: "cluster.local"
+        resolvConf: "/run/systemd/resolve/resolv.conf"
         registerNode: true
         runtimeRequestTimeout: "15m"
         tlsCertFile: "/var/lib/pki/kubelet_cert.pem"

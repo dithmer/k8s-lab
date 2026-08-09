@@ -9,6 +9,7 @@
     - kube-apiserver
     - kube-controller-manager
     - kube-scheduler
+    - kubernetes-coredns
 
   "node*":
     - pki

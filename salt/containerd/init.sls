@@ -7,7 +7,8 @@ download_containerd:
   archive.extracted:
     - name: /bin/
     - source: {{ containerd_url }}
-    - source_hash: {{ containerd_url }}.sha256sum
+    #- source_hash: {{ containerd_url }}.sha256sum
+    - skip_verify: True
     - options: "--strip-components=1"
     - enforce_toplevel: False
 

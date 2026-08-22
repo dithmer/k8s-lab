@@ -82,17 +82,17 @@ account_certs=("service-accounts" "admin")
 for i in ${account_certs[*]}; do
   gen_key_and_cert "${i}" "users.conf" "${i}"
 done
-prepare_pillar "ca" "kube-api-server" "service-accounts" "kube-controller-manager" "kube-scheduler" "admin" > server.sls
+prepare_pillar "ca" "kube-api-server" "service-accounts" "kube-controller-manager" "kube-scheduler" "admin" > kubernetes_control_plane.sls
 
 
 for i in $(seq 0 "$amount_of_nodes"); do
-  i="node-${i}"
+  i="kubernetes-node-${i}"
   # config contains {{ node_name }} placeholder, replace it with the actual node name
-  sed "s/{{ node_name }}/${i}/g" node.conf > "node_${i}.conf"
+  sed "s/{{ node_name }}/${i}/g" kubernetes-node.conf > "${i}.conf"
 
-  gen_key_and_cert "$i" "node_${i}.conf"
+  gen_key_and_cert "$i" "${i}.conf"
 
   prepare_pillar "ca":cert "kube-proxy" "$i" | sed 's/'"${i}"'/kubelet/g' > "${i}".sls
 done
 
-rm -rf -- *.csr *.srl *.key *.crt node_*.conf
+rm -rf -- *.csr *.srl *.key *.crt kubernetes_node_*.conf

@@ -2,8 +2,8 @@
   "*":
     - base
 
-  "server":
+  "kubernetes-control-plane":
     - minions.server
 
-  "node-0":
+  "kubernetes-node-[0-9]":
     - minions.node0

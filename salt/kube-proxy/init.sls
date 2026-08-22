@@ -3,6 +3,8 @@
 {% set kube_proxy_url = "https://dl.k8s.io/v" + kube_proxy_version + "/bin/linux/amd64/kube-proxy" %}
 {% set pki_dir = '/var/lib/pki' %}
 
+{% set control_plane_hostname = salt['pillar.get']('kubernetes:control_plane_hostname') %}
+
 /usr/local/bin/kube-proxy:
   file.managed:
     - source: {{ kube_proxy_url }}
@@ -37,7 +39,7 @@
           kubectl config set-cluster kubernetes \
             --certificate-authority={{ pki_dir }}/ca_cert.pem \
             --embed-certs=true \
-            --server=https://server.kubernetes.local:6443 \
+            --server=https://{{ control_plane_hostname }}.kubernetes.local:6443 \
             --kubeconfig={{ kube_proxy_config_dir }}/kube-proxy.kubeconfig
 
           kubectl config set-credentials system:kube-proxy  \

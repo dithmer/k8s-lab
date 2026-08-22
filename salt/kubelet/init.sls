@@ -15,6 +15,8 @@
 {% set service_name = "kubelet" %}
 {% set kubelet_service_file = "/etc/systemd/system/" + service_name + ".service" %}
 
+{% set control_plane_hostname = salt['pillar.get']('kubernetes:control_plane_hostname') %}
+
 {{ kubelet_config_dir }}/kubelet-config.yaml:
   file.managed:
     - makedirs: True
@@ -58,7 +60,7 @@
           kubectl config set-cluster kubernetes \
             --certificate-authority={{ pki_dir }}/ca_cert.pem \
             --embed-certs=true \
-            --server=https://server.kubernetes.local:6443 \
+            --server=https://{{ control_plane_hostname }}.kubernetes.local:6443 \
             --kubeconfig={{ kubelet_config_dir }}/kubelet.kubeconfig
 
           kubectl config set-credentials system:node:{{ grains['id'] }} \

@@ -2,7 +2,7 @@
   "*":
     - base
 
-  "server":
+  "kubernetes-control-plane":
     - pki
     - kubectl
     - etcd
@@ -11,7 +11,7 @@
     - kube-scheduler
     - kubernetes-coredns
 
-  "node*":
+  "kubernetes-node-[0-9]":
     - pki
     - kubectl
     - kubernetes-swap

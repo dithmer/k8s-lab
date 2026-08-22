@@ -7,6 +7,8 @@
 {% set kubernetes_lib = '/var/lib/kubernetes' %}
 {% set pki_dir = '/var/lib/pki' %}
 
+{% set control_plane_hostname = salt['pillar.get']('kubernetes:control_plane_hostname') %}
+
 download_kube_controller_manager:
   file.managed:
     - name: /usr/local/bin/kube-controller-manager
@@ -24,7 +26,7 @@ download_kube_controller_manager:
           kubectl config set-cluster kubernetes \
             --certificate-authority={{ pki_dir }}/ca_cert.pem \
             --embed-certs=true \
-            --server=https://server.kubernetes.local:6443 \
+            --server=https://{{ control_plane_hostname }}.kubernetes.local:6443 \
             --kubeconfig={{ kubernetes_lib }}/kube-controller-manager.kubeconfig
 
           kubectl config set-credentials system:kube-controller-manager \

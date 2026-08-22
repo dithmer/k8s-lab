@@ -7,6 +7,8 @@
 {% set kubernetes_lib = '/var/lib/kubernetes' %}
 {% set pki_dir = '/var/lib/pki' %}
 
+{% set control_plane_hostname = salt['pillar.get']('kubernetes:control_plane_hostname') %}
+
 download_kube_apiserver:
   file.managed:
     - name: /usr/local/bin/kube-apiserver
@@ -42,7 +44,7 @@ download_kube_apiserver:
             --runtime-config='api/all=true' \
             --service-account-key-file=/var/lib/pki/service-accounts_cert.pem \
             --service-account-signing-key-file=/var/lib/pki/service-accounts_key.pem \
-            --service-account-issuer=https://server.kubernetes.local:6443 \
+            --service-account-issuer=https://{{ control_plane_hostname }}.kubernetes.local:6443 \
             --service-node-port-range=30000-32767 \
             --tls-cert-file=/var/lib/pki/kube-api-server_cert.pem \
             --tls-private-key-file=/var/lib/pki/kube-api-server_key.pem \
@@ -75,7 +77,7 @@ kube-apiserver_daemon_reload:
           kubectl config set-cluster kubernetes \
             --certificate-authority={{ pki_dir }}/ca_cert.pem \
             --embed-certs=true \
-            --server=https://server.kubernetes.local:6443 \
+            --server=https://{{ control_plane_hostname }}.kubernetes.local:6443 \
             --kubeconfig={{ kubernetes_lib }}/admin.kubeconfig
 
           kubectl config set-credentials admin \
